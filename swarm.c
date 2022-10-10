@@ -1,10 +1,13 @@
 //
 // Created by heisenberg on 04/10/22.
 //
+#include <stdlib.h>
 #include "swarm.h"
 
 void updateInertia(swarm *swarm1,float w, float c1, float c2, float r1, float r2, int *socialPosition ){
     //TODO if r1 r2 are random just pick them here
+    r1=1/(rand()%10+1);
+    r2=1/(rand()%10+1);
     for(int i=0;i<K;i++) {
         swarm1->inertia[i] =
                 w * swarm1->inertia[i] //Inertia
@@ -16,8 +19,8 @@ void updateInertia(swarm *swarm1,float w, float c1, float c2, float r1, float r2
 //TODO limit the values
 void updatePosition(swarm *swarm1){
     for(int i=0;i<K;i++) {
-        swarm1->position[i]= swarm1->position[i]+swarm1->inertia[i]<numberOfNodes?swarm1->position[i]+swarm1->inertia[i]:numberOfNodes ;//limiting the max value
-        swarm1->position[i]=swarm1->position[i]<1?1:swarm1->position[i];
+        swarm1->position[i]= swarm1->position[i]+swarm1->inertia[i]<numberOfNodes?swarm1->position[i]+swarm1->inertia[i]:numberOfNodes-1 ;//limiting the max value
+        swarm1->position[i]=swarm1->position[i]<0?0:swarm1->position[i];
     }
 }
 

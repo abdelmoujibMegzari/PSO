@@ -4,10 +4,10 @@
 
 #ifndef PSO2_SWARM_H
 #define PSO2_SWARM_H
-#define K 4
+#define K 25
 #define numberOfSwarms 50
-#define numberOfNodes 50
-#define numberOfEdges 200
+#define numberOfNodes 100
+#define numberOfEdges 194
 #define maxNumberOfIterations 500
 typedef struct swarm_t
 {
