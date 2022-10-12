@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include "graph.h"
 #include "malloc.h"
+#include <string.h>
+
+void trimTrailing(char *string1);
 
 graph *createGraph(int size){
     graph *graph1= malloc(sizeof(graph));
@@ -22,7 +25,9 @@ void addEdge(graph* graph1,int vertex1, int vertex2){
 }
 
 int pairwiseConnectivity(graph *graph1){
-    int *marked= malloc(graph1->size*sizeof(int));
+    //TODO store the connected components for efficiency when adding back some nodes not sure it 's feasible
+
+    int *marked= calloc(graph1->size,sizeof(int));
     int groupNumber=0;
     int* count= calloc(graph1->size, sizeof(int));
     for(int i=0;i<graph1->size;i++){
@@ -145,7 +150,38 @@ graph* generateGraphFromFile(char *fileName){
         printf("file can't be opened\n");
     }
     char sizeStr[10];
+    int size;
     fgets(sizeStr,10,f);
-    printf("%s",sizeStr);
-    graph *graph1 = createGraph(10);
+    trimTrailing(sizeStr);
+    size = atoi(sizeStr);
+    graph *graph1 = createGraph(size);
+    //Reading Line By Line
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while ((read = getline(&line, &len, f)) != -1) {
+        char* node1;
+        char* node2;
+        node1 = strtok(line,":");
+        node2 = strtok(NULL, " ");
+        while( node2 != NULL ) {
+            addEdge(graph1, atoi(node1),atoi(node2));
+            node2 = strtok(NULL, " ");
+        }
+    }
+    fclose(f);
+    return graph1;
+}
+
+void trimTrailing(char *string1) {
+    int i =0;
+    int index=0;
+    while(string1[i] != '\0'){
+        if(string1[i] != ' ' && string1[i] != '\t' && string1[i] != '\n')
+        {
+            index= i;
+        }
+        i++;
+    }
+    string1[index + 1] = '\0';
 }

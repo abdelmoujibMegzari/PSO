@@ -15,16 +15,16 @@ float goalFunction(int* position);
 graph * graph2;
 int main() {
     //Problem Constants
-    int seed=1256568;
-    float w=10;
-    float c1=1;
-    float c2=1;
+    int seed=1256854;
+    float w=0.5f;
+    float c1=0.2f;
+    float c2=0.2f;
     // initializing the swarms
     srand(seed);
 
-    graph2=generateRandomGraph(numberOfNodes,numberOfEdges);
-    //graph2 = generateGraphFromFile("graphDataSet/ErdosRenyi_n2500.txt");
-    printf("%d\n", pairwiseConnectivity(graph2));
+    //graph2=generateRandomGraph(numberOfNodes,numberOfEdges);
+    graph2 = generateGraphFromFile("graphDataSet/ErdosRenyi_n250.txt");
+    printf("pairwize connectivity in the begining: %d\n", pairwiseConnectivity(graph2));
     swarm ** swarms = malloc(sizeof(swarm*)*numberOfSwarms);
     for(int i=0;i<numberOfSwarms;i++){
         swarms[i] = malloc((sizeof(swarm)));
@@ -34,7 +34,10 @@ int main() {
         }
         swarms[i]->cognitiveValue=-FLT_MAX;
         swarms[i]->cognitivePosition= calloc(K,sizeof(int));
-        swarms[i]->inertia= calloc(K, sizeof(int));
+        swarms[i]->inertia= calloc(K, sizeof(double ));
+        for(int j=0; j<K; j++){
+            swarms[i]->inertia[j] = rand()%10;
+        }
     }
 
     //problem Social Variables
@@ -43,12 +46,18 @@ int main() {
 
     //starting optimisation
     for(int iteration=0; iteration<maxNumberOfIterations;iteration++) {
+        printf("%d:%f\n",iteration,socialValue);
+        //printf("%d:%f\n%f:(",iteration,socialValue, goalFunction(swarms[0]->position));
+        //for(int i=0;i<K;i++) {
+        //    printf("%d,", swarms[0]->position[i]);
+        //}
+        //printf(")\n");
         for (int i=0; i < numberOfSwarms; i++) {
             updateCognitive(swarms[i], goalFunction);
         }
         updateSocial(swarms, socialPosition, &socialValue);
         for (int i = 0; i < numberOfSwarms; i++) {
-            updateInertia(swarms[i], w, c1, c2, 1, 1, socialPosition);
+            updateInertia(swarms[i], w, c1, c2, 1.0f/(rand()%10+1), 1.0f/(rand()%10+1), socialPosition);
             updatePosition(swarms[i]);
         }
     }

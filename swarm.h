@@ -2,19 +2,22 @@
 // Created by heisenberg on 04/10/22.
 //
 
+//TODO why does the system converge so fast
+
 #ifndef PSO2_SWARM_H
 #define PSO2_SWARM_H
-#define K 25
-#define numberOfSwarms 50
-#define numberOfNodes 100
-#define numberOfEdges 194
-#define maxNumberOfIterations 500
+#define K 50
+#define numberOfSwarms 500
+#define numberOfNodes 235
+#define numberOfEdges 350
+#define maxNumberOfIterations 100
 typedef struct swarm_t
 {
     int* position;
     float cognitiveValue;
     int* cognitivePosition;
-    int* inertia;
+    //TODO make position float and round when calculating goal function
+    double* inertia;
 
 } swarm;
 
